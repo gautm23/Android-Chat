@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "582594487330",
+    "firebase_url": "https://android-chat-12ffc.firebaseio.com",
+    "project_id": "android-chat-12ffc",
+    "storage_bucket": "android-chat-12ffc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:582594487330:android:4b04c9939376ff42",
+        "android_client_info": {
+          "package_name": "com.example.gautam.chattingapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "582594487330-ntc2rkdo0sjbnfjcqtjr34dq17ssfh7b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.gautam.chattingapp",
+            "certificate_hash": "7d02618d48418d474db5bb8e0a848d8eec742f5a"
+          }
+        },
+        {
+          "client_id": "582594487330-lm4e6uon7b080171eevrlalmbupobqse.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdDwfAOX3Iz84bMt3IpzDqrw4tPnICyw0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "582594487330-lm4e6uon7b080171eevrlalmbupobqse.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
