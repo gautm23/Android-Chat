@@ -80,6 +80,7 @@ public class SignIn_Signup extends AppCompatActivity {
                 TimeUnit.SECONDS,   // Unit of timeout
                 SignIn_Signup.this,               // Activity (for callback binding)
                 verificationCallbacks);
+        //verifyButton.setEnabled(true);
     }
 
     private void setUpVerificatonCallbacks() {
@@ -90,13 +91,13 @@ public class SignIn_Signup extends AppCompatActivity {
                     @Override
                     public void onVerificationCompleted(
                             PhoneAuthCredential credential) {
-                        verifyButton.setEnabled(false);
+                       /* verifyButton.setEnabled(false);
                         Intent intent=new Intent(SignIn_Signup.this,MainActivity.class);
                         if(username.getText().toString().length()>0)
                             intent.putExtra(Intent.EXTRA_TEXT,username.getText().toString());
                         else
                             intent.putExtra(Intent.EXTRA_TEXT," ");
-                        startActivity(intent);
+                        startActivity(intent);*/
                         signInWithPhoneAuthCredential(credential);
                     }
 

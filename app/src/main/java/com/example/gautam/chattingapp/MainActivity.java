@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -21,16 +23,32 @@ import android.widget.ListView;
 import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    FirebaseAuth fbAuth;
-    FirebaseUser firebaseUser;
-    ArrayList<String>users=new ArrayList<>();
+    private Query query;
+    private FirebaseAuth fbAuth;
+    private String currentUserUid;
+    private DatabaseReference dbRef1;
+    private DatabaseReference dbRef2;
+    private FirebaseUser firebaseUser;
+    private FirebaseDatabase database;
+    private   ListView listView;
+    private ArrayAdapter<String> arrayAdapter;
     final private int PERMISSION_REQUEST_CODE = 124;
-    ArrayList<String>contactlist=new ArrayList<>();
+    private ArrayList<String>users=new ArrayList<>();
+   private ArrayList<String> contactlist=new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,19 +56,31 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar=(Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         fbAuth=FirebaseAuth.getInstance();
-        Intent intent=getIntent();
-       // if(intent.getStringExtra(Intent.EXTRA_TEXT).equals(" "))
-      //  {
-           // setTitle();
-           setTitle("Chat List");
-      //  }
-      //  else;
-           // setTitle(Intent.EXTRA_TEXT);
-        ListView listView=(ListView) findViewById(R.id.chatlist);
-        AccessContact();
-        ArrayAdapter<String> arrayAdapter=new ArrayAdapter(this,android.R.layout.simple_list_item_1,contactlist);
+        setTitle("Friend List");
+         listView=(ListView) findViewById(R.id.chatlist);
+         currentUserUid = fbAuth.getCurrentUser().getUid();
+        database=FirebaseDatabase.getInstance();
+         arrayAdapter=new ArrayAdapter(this,android.R.layout.simple_list_item_1,contactlist);
         listView.setAdapter(arrayAdapter);
+       // getCallingActivity().getClassName();
+        dbRef2=database.getReference("/users/"+currentUserUid+"/friends");
+         query	=	dbRef2.orderByKey();
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        query.addListenerForSingleValueEvent(queryValueListener);
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        dbRef2.removeEventListener(queryValueListener);
+       // dbRef1.removeEventListener(childEventListener);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main,menu);
@@ -61,8 +91,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId())
         {
-            case R.id.refresh1 :{  AccessContact();
-                displayContacts();
+            case R.id.refresh1 :{  AccessContact(); break;
             }
             case R.id.sign_out :{
                 fbAuth.signOut();
@@ -73,6 +102,35 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    private ValueEventListener  queryValueListener= new ValueEventListener() {
+
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            if(!dataSnapshot.exists())
+            {
+                AccessContact();
+            }
+            else
+            {
+                contactlist.clear();
+                Iterable<DataSnapshot>	snapshotIterator	=	dataSnapshot.getChildren();
+                Iterator<DataSnapshot> iterator	=	snapshotIterator.iterator();
+
+                while	(iterator.hasNext())	{
+
+                    DataSnapshot	next	=	(DataSnapshot)	iterator.next();
+                    contactlist.add(next.getValue().toString());
+
+                }
+                arrayAdapter.notifyDataSetChanged();
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+        }
+    };
     private void AccessContact()
     {
 
@@ -81,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
         {
             requestRuntimePermission(MainActivity.this,
                     Manifest.permission.READ_CONTACTS, PERMISSION_REQUEST_CODE);
+            AccessContact();
         } else
         {
             displayContacts();
@@ -138,10 +197,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void displayContacts() {
-
+        contactlist.clear();
         ContentResolver cr = getContentResolver();
         Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
                 null, null, null, null);
+            database.getReference("/users/"+currentUserUid+"/friends").removeValue();
         if (cur.getCount() > 0) {
             while (cur.moveToNext()) {
                 String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
@@ -156,6 +216,9 @@ public class MainActivity extends AppCompatActivity {
                     while (pCur.moveToNext()) {
                         String phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                             contactlist.add(phoneNo);
+                        DatabaseReference newChildRef=dbRef2.push();
+                        String	key	=	newChildRef.getKey(); dbRef2.child(key).setValue(phoneNo);
+                            arrayAdapter.notifyDataSetChanged();
                         }
                     pCur.close();
                 }
