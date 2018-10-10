@@ -36,11 +36,12 @@ import java.util.Iterator;
 
 
 public class MainActivity extends AppCompatActivity {
-
+    public static String u_name="def";
+    public static String p_no="gdbd";
     private Query query;
     private FirebaseAuth fbAuth;
     private String currentUserUid;
-    private DatabaseReference dbRef1;
+    private DatabaseReference dbRef;
     private DatabaseReference dbRef2;
     private FirebaseUser firebaseUser;
     private FirebaseDatabase database;
@@ -49,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
     final private int PERMISSION_REQUEST_CODE = 124;
     private ArrayList<String>users=new ArrayList<>();
    private ArrayList<String> contactlist=new ArrayList<>();
+   private ArrayList<String> contact_name=new ArrayList<>();
+   private ArrayList<String> friendList=new ArrayList<>();
+   private ArrayList<String> friend_contacts=new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +64,20 @@ public class MainActivity extends AppCompatActivity {
          listView=(ListView) findViewById(R.id.chatlist);
          currentUserUid = fbAuth.getCurrentUser().getUid();
         database=FirebaseDatabase.getInstance();
+        dbRef=database.getReference();
+        Intent intent=getIntent();
+        String ss=intent.getStringExtra(Intent.EXTRA_TEXT);
+        if(ss.equals("SIGNINUP"))
+        {   ss=intent.getStringExtra(u_name);
+            if(ss.equals(" "));
+            else
+            { //Toast.makeText(this,"cdsvrv",Toast.LENGTH_SHORT).show();
+                dbRef.child("users").child(currentUserUid).child("name").setValue(intent.getStringExtra(u_name));
+                ss=intent.getStringExtra(p_no);
+               dbRef.child("users").child(currentUserUid).child("phone").setValue(ss);
+                dbRef.child("userlist").child(ss).setValue(intent.getStringExtra(u_name));
+            }
+        }
          arrayAdapter=new ArrayAdapter(this,android.R.layout.simple_list_item_1,contactlist);
         listView.setAdapter(arrayAdapter);
        // getCallingActivity().getClassName();
@@ -71,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         query.addListenerForSingleValueEvent(queryValueListener);
-
     }
 
     @Override
@@ -113,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
             else
             {
                 contactlist.clear();
+                contact_name.clear();
                 Iterable<DataSnapshot>	snapshotIterator	=	dataSnapshot.getChildren();
                 Iterator<DataSnapshot> iterator	=	snapshotIterator.iterator();
 
@@ -131,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
+
     private void AccessContact()
     {
 
@@ -215,10 +234,20 @@ public class MainActivity extends AppCompatActivity {
                             new String[]{id}, null);
                     while (pCur.moveToNext()) {
                         String phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        if(phoneNo.length()==13)
+                            contactlist.add(phoneNo.substring(3));
+                        if(phoneNo.length()==11)
+                            contactlist.add(phoneNo.substring(1));
+                        if(phoneNo.length()==10)
                             contactlist.add(phoneNo);
-                        DatabaseReference newChildRef=dbRef2.push();
-                        String	key	=	newChildRef.getKey(); dbRef2.child(key).setValue(phoneNo);
+                        if(phoneNo.length()>=10) {
+                            contact_name.add(name);
+                            DatabaseReference newChildRef = dbRef2.push();
+                            String key = newChildRef.getKey();
+                            dbRef2.child(key).child("name").setValue(name);
+                            dbRef2.child(key).child("contact_no").setValue(phoneNo);
                             arrayAdapter.notifyDataSetChanged();
+                        }
                         }
                     pCur.close();
                 }

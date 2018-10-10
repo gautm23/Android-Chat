@@ -36,6 +36,7 @@ public class Authentication extends AppCompatActivity {
                 if	(user	!=	null)
                 {
                     Intent intent=new Intent(Authentication.this,MainActivity.class);
+                    intent.putExtra(Intent.EXTRA_TEXT,"Authentication");
                     startActivity(intent);
 
                 }
@@ -54,13 +55,13 @@ public class Authentication extends AppCompatActivity {
     public void Sign_in(View view)
     {
         Intent intent=new Intent(Authentication.this,SignIn_Signup.class);
-         intent.putExtra(Intent.EXTRA_TEXT,"sign_in");
+         intent.putExtra(SignIn_Signup.signinup,"sign_in");
         startActivity(intent);
     }
     public void  Sign_up(View view)
     {
         Intent intent=new Intent(Authentication.this,SignIn_Signup.class);
-        intent.putExtra(Intent.EXTRA_TEXT,"sign_up");
+        intent.putExtra(SignIn_Signup.signinup,"sign_up");
         startActivity(intent);
     }
     @Override

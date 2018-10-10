@@ -23,15 +23,14 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.concurrent.TimeUnit;
 
 public class SignIn_Signup extends AppCompatActivity {
-
+    public  static String signinup="abc";
     private static final String TAG = "PhoneAuth";
-
     private EditText username;
     private EditText phonenumber;
     private EditText code;
     private Button sendButton;
     private Button verifyButton;
-
+    private String phoneNumber;
     private String phoneVerificationId;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks
             verificationCallbacks;
@@ -52,7 +51,7 @@ public class SignIn_Signup extends AppCompatActivity {
         sendButton = (Button) findViewById(R.id.button);
         Intent intent=getIntent();
 
-        if(intent.getStringExtra(Intent.EXTRA_TEXT).equals("sign_in")) {
+        if(intent.getStringExtra(signinup).equals("sign_in")) {
             username.setVisibility(View.GONE);
             setTitle("Sign In");
         }
@@ -70,7 +69,7 @@ public class SignIn_Signup extends AppCompatActivity {
 
     public void sendme(View view) {
 
-        String phoneNumber = phonenumber.getText().toString();
+        phoneNumber = phonenumber.getText().toString();
 
         setUpVerificatonCallbacks();
 
@@ -147,9 +146,11 @@ public class SignIn_Signup extends AppCompatActivity {
                             FirebaseUser user = task.getResult().getUser();
                            Intent intent=new Intent(SignIn_Signup.this,MainActivity.class);
                             if(username.getText().toString().length()>0)
-                                intent.putExtra(Intent.EXTRA_TEXT,username.getText().toString());
+                            { intent.putExtra(MainActivity.u_name,username.getText().toString());}
                             else
-                                intent.putExtra(Intent.EXTRA_TEXT," ");
+                            {intent.putExtra(MainActivity.u_name," ");}
+                            intent.putExtra(Intent.EXTRA_TEXT,"SIGNINUP");
+                            intent.putExtra(MainActivity.p_no,phoneNumber.substring(3));
                            startActivity(intent);
 
 
