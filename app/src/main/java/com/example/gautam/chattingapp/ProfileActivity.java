@@ -20,7 +20,7 @@ public class ProfileActivity extends AppCompatActivity {
         TextView textView3=(TextView)findViewById(R.id.textView3);
         ImageView imageView=(ImageView) findViewById(R.id.imageView);
         textView.setText("Name:"+intent.getStringExtra(Nm));
-        textView.setText("contact:"+intent.getStringExtra(ph));
-        textView.setText("uniqueId"+intent.getStringExtra(uuid));
+        textView2.setText("contact:"+intent.getStringExtra(ph));
+        textView3.setText("uniqueId:"+intent.getStringExtra(uuid));
     }
 }
