@@ -135,7 +135,11 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId())
         {
             case R.id.profile :  {
-
+                                    Intent intent=new Intent(MainActivity.this,ProfileActivity.class);
+                                            intent.putExtra(ProfileActivity.Nm,currentUserName);
+                                            intent.putExtra(ProfileActivity.ph,currentuserphoneno);
+                                            intent.putExtra(ProfileActivity.uuid,currentUserUid);
+                                            startActivity(intent);
 
                                    } break;
 
