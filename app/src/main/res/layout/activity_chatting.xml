@@ -10,13 +10,13 @@
     <include
         android:id="@+id/chatting_toolbar"
         layout="@layout/toolbar_main"
-        app:layout_constraintBottom_toTopOf="@+id/list"
+        app:layout_constraintBottom_toTopOf="@+id/recycler2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ListView
+    <!--<ListView
         android:id="@+id/list"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -24,11 +24,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chatting_toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/chatting_toolbar" />-->
+    <android.support.v7.widget.RecyclerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/recycler2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/button3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chatting_toolbar"
+        />
 
     <EditText
         android:id="@+id/editText4"
-        android:layout_width="276dp"
+        android:layout_width="293dp"
         android:layout_height="45dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
@@ -40,20 +51,19 @@
         app:layout_constraintEnd_toStartOf="@+id/button3"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/list" />
+        app:layout_constraintTop_toBottomOf="@+id/recycler2" />
 
     <Button
         android:id="@+id/button3"
-        android:layout_width="89dp"
+        android:layout_width="55dp"
         android:layout_height="45dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="4dp"
-        android:onClick="message"
         android:background="@drawable/click"
+        android:onClick="message"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/editText4"
-        app:layout_constraintTop_toBottomOf="@+id/list" />
+        app:layout_constraintTop_toBottomOf="@+id/recycler2" />
 
 </android.support.constraint.ConstraintLayout>

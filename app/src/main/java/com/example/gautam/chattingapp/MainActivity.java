@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser firebaseUser;
     private FirebaseDatabase database;
     private   ListView listView;
+    private boolean doubleclicksimultaneously=false;
     private ArrayAdapter<String> arrayAdapter;
     final private int PERMISSION_REQUEST_CODE = 124;
    private String currentUserName;
@@ -122,6 +124,23 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
        dbRef2.removeEventListener(queryValueListener);
        // dbRef1.removeEventListener(childEventListener);
+    }
+    @Override
+    public void onBackPressed() {
+        if(doubleclicksimultaneously)
+        {super.onBackPressed();
+            return;
+        }
+        doubleclicksimultaneously=true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleclicksimultaneously = false;
+            }
+        }, 2000);
     }
 
     @Override
@@ -378,4 +397,5 @@ public class MainActivity extends AppCompatActivity {
        cur.close();
         dbRef=database.getReference();
     }
+
 }

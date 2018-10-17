@@ -1,11 +1,21 @@
 package com.example.gautam.chattingapp;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.Toolbar;
@@ -44,7 +54,8 @@ public class ChattingActivity extends AppCompatActivity {
     private Button button;
     private EditText editText;
     private ArrayList<String> listItems	=	new	ArrayList<String>();
-    ArrayAdapter<String> adapter;
+   // ArrayAdapter<String> adapter;
+    private recycle adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,19 +74,109 @@ public class ChattingActivity extends AppCompatActivity {
         friendnumber=intent.getStringExtra(friend_phone_no);
         friendid=intent.getStringExtra(friend_Id);
         setTitle(friendname);
-        ListView dataListView=(ListView)findViewById(R.id.list);
+        /*ListView dataListView=(ListView)findViewById(R.id.list);
         adapter	=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
-        dataListView.setAdapter(adapter);
+        dataListView.setAdapter(adapter);*/
+        RecyclerView recyclerView=(RecyclerView)findViewById(R.id.recycler2);
+        adapter=new recycle(listItems);
+        recyclerView.setAdapter(adapter);
+        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
         firebaseDatabase=FirebaseDatabase.getInstance();
         databaseReference=firebaseDatabase.getReference("/users/"+chatid+"/messages");
         databaseReference2=firebaseDatabase.getReference("/users/"+friendid+"/messages");
         databaseReference.addChildEventListener(childEventListener);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.chatting_menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId())
+        {
+            case R.id.call : {
+                        AccessContact();
+            }
+            break;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    private void AccessContact()
+    {
+
+        String message = "You need to grant access to Manifest.permission.READ_CONTACTS";
+        if (!hasRuntimePermission(getApplicationContext(), Manifest.permission.CALL_PHONE))
+        {
+            requestRuntimePermission(ChattingActivity.this, Manifest.permission.CALL_PHONE, 1111);
+            AccessContact();
+        } else
+        {
+            Intent callIntent = new Intent(Intent.ACTION_DIAL);
+            callIntent.setData(Uri.parse("tel:+91"+friendnumber));
+            startActivity(callIntent);
+        }
+    }
+    private boolean hasRuntimePermission(Context context, String runtimePermission)     {
+        boolean ret = false;
+        //Get current android os version.
+        int currentAndroidVersion = Build.VERSION.SDK_INT;
+
+        // Build.VERSION_CODES.M's value is 23.
+        if(currentAndroidVersion > 22)
+        {
+            // Only android version 23+ need to check runtime permission.
+            if(ContextCompat.checkSelfPermission(context, runtimePermission) == PackageManager.PERMISSION_GRANTED)
+                ret = true;
+        }
+        else
+        {
+            ret = true;
+        }
+        return ret;
+    }
+    private void requestRuntimePermission(Activity activity, String runtimePermission, int requestCode)
+    {
+        ActivityCompat.requestPermissions(activity, new String[]{runtimePermission}, requestCode);
+    }
+
+    public void onRequestPermissionsResult(int requestCode,    String[] permissions, int[] grantResults)
+    {         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // If this is our permission request result.
+        if(requestCode==1111)
+        {
+            if(grantResults.length > 0)
+            {                 // Construct result message.
+               // StringBuffer msgBuf = new StringBuffer();
+                int grantResult = grantResults[0];
+                if(grantResult==PackageManager.PERMISSION_GRANTED)
+                {
+                    Toast.makeText(getApplicationContext(),"You denied Manifest.permission.CALL_PHONE permissions", Toast.LENGTH_LONG).show();
+                    Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                    callIntent.setData(Uri.parse("tel:91"+friendnumber));
+                    startActivity(callIntent);
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(),"You denied Manifest.permission.CALL_PHONE permissions", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
+
     ChildEventListener childEventListener=new ChildEventListener() {
         @Override
         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
             String str2=dataSnapshot.child("message").getValue(String.class);
-            adapter.add(str2);
+          listItems.add(str2);
+        //  adapter.notifyDataSetChanged();
+          adapter.notifyItemInserted(listItems.size());
+            // adapter.add(str2);
            // adapter.notifyDataSetChanged();
         }
 
