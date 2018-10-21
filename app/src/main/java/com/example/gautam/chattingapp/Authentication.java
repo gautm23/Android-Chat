@@ -24,6 +24,7 @@ public class Authentication extends AppCompatActivity {
              setContentView(R.layout.activity_authentication);
              Toolbar toolbar=(Toolbar) findViewById(R.id.auth_toolbar);
              setSupportActionBar(toolbar);
+             
         fbAuth	=	FirebaseAuth.getInstance();
 
         authListener	=	new	FirebaseAuth.AuthStateListener()

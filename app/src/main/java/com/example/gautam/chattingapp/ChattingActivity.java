@@ -73,6 +73,7 @@ public class ChattingActivity extends AppCompatActivity {
         friendname=intent.getStringExtra(friend_name);
         friendnumber=intent.getStringExtra(friend_phone_no);
         friendid=intent.getStringExtra(friend_Id);
+        listItems.clear();
         setTitle(friendname);
         /*ListView dataListView=(ListView)findViewById(R.id.list);
         adapter	=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
@@ -83,8 +84,8 @@ public class ChattingActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         firebaseDatabase=FirebaseDatabase.getInstance();
-        databaseReference=firebaseDatabase.getReference("/users/"+chatid+"/messages");
-        databaseReference2=firebaseDatabase.getReference("/users/"+friendid+"/messages");
+        databaseReference=firebaseDatabase.getReference("/users/"+chatid+"/messages/"+friendnumber);
+        databaseReference2=firebaseDatabase.getReference("/users/"+friendid+"/messages/"+chatnumber);
         databaseReference.addChildEventListener(childEventListener);
     }
 

@@ -194,6 +194,7 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.sign_out :    {
                                          fbAuth.signOut();
+                                         finishAffinity();
                                          Intent intent=new Intent(MainActivity.this,Authentication.class);
                                          startActivity(intent);
 
