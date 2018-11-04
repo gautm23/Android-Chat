@@ -42,8 +42,8 @@ public class SignIn_Signup extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in__signup);
-        Toolbar toolbar=(Toolbar) findViewById(R.id.signup_toolbar);
-        setSupportActionBar(toolbar);
+       /* Toolbar toolbar=(Toolbar) findViewById(R.id.signup_toolbar);
+        setSupportActionBar(toolbar);*/
          username=(EditText) findViewById(R.id.editText);
         phonenumber = (EditText) findViewById(R.id.editText2);
         code = (EditText) findViewById(R.id.editText3);
@@ -53,12 +53,12 @@ public class SignIn_Signup extends AppCompatActivity {
 
         if(intent.getStringExtra(signinup).equals("sign_in")) {
             username.setVisibility(View.GONE);
-            setTitle("Sign In");
+           // setTitle("Sign In");
         }
-        else
+       /* else
         {
             setTitle("Sign Up");
-        }
+        }*/
         verifyButton.setEnabled(false);
 
 
@@ -145,6 +145,7 @@ public class SignIn_Signup extends AppCompatActivity {
                             verifyButton.setEnabled(false);
                             FirebaseUser user = task.getResult().getUser();
                            Intent intent=new Intent(SignIn_Signup.this,MainActivity.class);
+                           finishAffinity();
                             if(username.getText().toString().length()>0)
                             { intent.putExtra(MainActivity.u_name,username.getText().toString());}
                             else

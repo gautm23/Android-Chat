@@ -129,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if(doubleclicksimultaneously)
         {super.onBackPressed();
+            finishAffinity();
             return;
         }
         doubleclicksimultaneously=true;
