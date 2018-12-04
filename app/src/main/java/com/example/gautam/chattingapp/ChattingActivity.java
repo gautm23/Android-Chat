@@ -75,9 +75,6 @@ public class ChattingActivity extends AppCompatActivity {
         friendid=intent.getStringExtra(friend_Id);
         listItems.clear();
         setTitle(friendname);
-        /*ListView dataListView=(ListView)findViewById(R.id.list);
-        adapter	=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
-        dataListView.setAdapter(adapter);*/
         RecyclerView recyclerView=(RecyclerView)findViewById(R.id.recycler2);
         adapter=new recycle(listItems);
         recyclerView.setAdapter(adapter);
@@ -114,7 +111,6 @@ public class ChattingActivity extends AppCompatActivity {
         if (!hasRuntimePermission(getApplicationContext(), Manifest.permission.CALL_PHONE))
         {
             requestRuntimePermission(ChattingActivity.this, Manifest.permission.CALL_PHONE, 1111);
-            AccessContact();
         } else
         {
             Intent callIntent = new Intent(Intent.ACTION_DIAL);

@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         {   ss=intent.getStringExtra(u_name);
             if(ss.equals(" "));
             else
-            { //Toast.makeText(this,"cdsvrv",Toast.LENGTH_SHORT).show();
+            {
                 dbRef.child("users").child(currentUserUid).child("name").setValue(intent.getStringExtra(u_name));
                 ss=intent.getStringExtra(p_no);
                dbRef.child("users").child(currentUserUid).child("phone").setValue(ss);
@@ -95,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
         listView=(ListView) findViewById(R.id.chatlist);
          arrayAdapter=new ArrayAdapter(this,android.R.layout.simple_list_item_1,user_friendlist);
         listView.setAdapter(arrayAdapter);
-       // getCallingActivity().getClassName();
         dbRef2=database.getReference("/users/"+currentUserUid);
 
        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -275,7 +274,6 @@ public class MainActivity extends AppCompatActivity {
         {
             requestRuntimePermission(MainActivity.this,
                     Manifest.permission.READ_CONTACTS, PERMISSION_REQUEST_CODE);
-            AccessContact();
         } else
         {
             displayContacts();

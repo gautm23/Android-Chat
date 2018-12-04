@@ -53,26 +53,16 @@ public class SignIn_Signup extends AppCompatActivity {
 
         if(intent.getStringExtra(signinup).equals("sign_in")) {
             username.setVisibility(View.GONE);
-           // setTitle("Sign In");
         }
-       /* else
-        {
-            setTitle("Sign Up");
-        }*/
+
         verifyButton.setEnabled(false);
 
-
         fbAuth = FirebaseAuth.getInstance();
-
-
     }
 
     public void sendme(View view) {
-
         phoneNumber = phonenumber.getText().toString();
-
         setUpVerificatonCallbacks();
-
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 phoneNumber,        // Phone number to verify
                 60,                 // Timeout duration
@@ -90,13 +80,6 @@ public class SignIn_Signup extends AppCompatActivity {
                     @Override
                     public void onVerificationCompleted(
                             PhoneAuthCredential credential) {
-                       /* verifyButton.setEnabled(false);
-                        Intent intent=new Intent(SignIn_Signup.this,MainActivity.class);
-                        if(username.getText().toString().length()>0)
-                            intent.putExtra(Intent.EXTRA_TEXT,username.getText().toString());
-                        else
-                            intent.putExtra(Intent.EXTRA_TEXT," ");
-                        startActivity(intent);*/
                         signInWithPhoneAuthCredential(credential);
                     }
 
@@ -116,13 +99,8 @@ public class SignIn_Signup extends AppCompatActivity {
                     @Override
                     public void onCodeSent(String verificationId,
                                            PhoneAuthProvider.ForceResendingToken token) {
-
                         phoneVerificationId = verificationId;
-                        resendToken = token;
-
                         verifyButton.setEnabled(true);
-                       // sendButton.setEnabled(false);
-                        //resendButton.setEnabled(true);
                     }
                 };
     }
@@ -164,27 +142,4 @@ public class SignIn_Signup extends AppCompatActivity {
                     }
                 });
     }
-
-    public void resendCode(View view) {
-
-        String phoneNumber = phonenumber.getText().toString();
-
-        setUpVerificatonCallbacks();
-
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                phoneNumber,
-                60,
-                TimeUnit.SECONDS,
-                this,
-                verificationCallbacks,
-                resendToken);
-    }
-
-    public void signOut(View view) {
-        fbAuth.signOut();
-       // statusText.setText("Signed Out");
-        //signoutButton.setEnabled(false);
-        sendButton.setEnabled(true);
-    }
-
 }
